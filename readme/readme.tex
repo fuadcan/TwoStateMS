@@ -1,0 +1,68 @@
+\documentclass{article}
+\begin{document}
+\begin{center}
+	\Large \bf Read Me 
+\end{center}
+The replication file consists the codes and helper files to replicate the Regime Switching Output Gap analysis. The codes can be decomposed to three steps; estimating parameters $ d,P,\mu\sigma, etc. $, reporting descriptive statistics of the results and generating plots. All outputs are saved to disk.
+
+The codes are designed in R project version 3.41 for Windows and developed in Windows 8 64bit. To run the code trouble-free, please check your R version and save the replication file to Documents folder in Windows.
+
+\begin{flushleft}
+	\large Usage
+\end{flushleft}
+Run all the commands in main.R. The file contains commands used for reading, estimating parameters, reporting and plotting results for all pairs for each data. The preliminary results are saved in Results folder as .rda files. NOTE: The tables in these files are re-formed for the paper but both shares same outline.
+
+\begin{flushleft}
+	\large Codes
+\end{flushleft}
+\begin{enumerate}
+	\item lnviD2.R: Estimates $ d $ and transition probabilities for a given series.
+
+	Inputs:
+		 \begin{itemize}
+		 	\item b: Initial set of parameters
+		 	\item w: series to be fitted MS-ARFIMA$ (0,d,0) $
+		 \end{itemize}
+		 
+	Output: Log-likelihood of the estimate
+		 
+	\item convDLV.R: Calls lnviD2.R for all log-differentiated gap series.
+	
+		Input:
+		\begin{itemize}
+			
+			\item yearOrRegion: Name of the data (1930,1940,Europe+G7,Europe+S\&P,G7+S\&P)
+
+		\end{itemize}
+		
+		Outputs: Parameter estimates for all gap series (both saved to disk and returned)
+		
+	\item plotAll.R: Calls results which are corrected in main.R, extracts the path by using dlvPath.R, plots the path and saves to pathplots folder.
+	
+	Input:
+	\begin{itemize}
+		
+		\item yearOrRegion: Name of the data (1930,1940,Europe+G7,Europe+S\&P,G7+S\&P)
+		
+	\end{itemize}
+	
+	Output: Plots are saved to disk
+	
+		\item plotRejs.R: Calls results which are corrected in main.R, classifies results with $ d<1 $ as S (for stationary or mean reverting) and $ d\geq 1 $ as N (for non-stationary), calculates and plots the ratio of the pairs with $ d<1 $ by time for a given dataset; then saves to plots folder.
+		
+		Input:
+		\begin{itemize}
+			
+			\item yearOrRegion: Name of the data (1930,1940,Europe+G7,Europe+S\&P,G7+S\&P)
+			
+		\end{itemize}
+		
+		Output: Plots are saved to disk
+
+	\item main.R: Calls all above codes. Additionally processes outputs and saves to disk. The table in paper is generated and saved into ReplicationFiles folder as table.csv.
+	
+\end{enumerate}
+
+
+
+\end{document}
