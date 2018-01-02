@@ -1,14 +1,12 @@
-setwd("Documents/twostate/")
 source("lnviDM2.R")
 source("lnviD2.R")
 source("mclapplyhack.R")
-library(parallel)
 
 
 convDLV <- function(yearOrRegion,type){
   # type = 1 for allowing only d switching states,
   # type = 2 for allowing both d and mu switching states
-  # yearOrRegion <- 1940
+  # yearOrRegion <- 1930; type <- 1
   
   # Reading data
   if(is.numeric(yearOrRegion)){year      <- yearOrRegion
@@ -19,11 +17,10 @@ convDLV <- function(yearOrRegion,type){
     z         <- read.table(filename,header = F,sep = " ",skip = 1)
     # colnames(z) <- as.character(z[1,]); z <- z[-1,]
     # z         <- data.matrix(z)
-  } else {fname1 <- paste0("data/mds_G7-1950.csv"); fname2 <- paste0("data/mds_Europe-1950.csv"); fname3 <- paste0("data/mds_S&P-1950.csv")
+  } else if(yearOrRegion=="Europe"){z <- data.matrix(read.table("data/mds_Europe-1950.csv",header = T,sep = ";"))} else {fname1 <- paste0("data/mds_G7-1950.csv"); fname2 <- paste0("data/mds_Europe-1950.csv"); fname3 <- paste0("data/mds_S&P-1950.csv")
   z_g7         <- read.table(fname1,header = T,sep = ";"); z_g7 <- data.matrix(z_g7)
   z_eu         <- read.table(fname2,header = T,sep = ";"); z_eu <- data.matrix(z_eu)
   z_sp         <- read.table(fname3,header = T,sep = ";"); z_sp <- data.matrix(z_sp)
-  
   
   if(yearOrRegion=="Europe+G7"|yearOrRegion=="G7+Europe")
   {z<- matrix(c(z_g7,z_eu),dim(z_g7)[1],); colnames(z)<- c(colnames(z_g7),colnames(z_eu))} else

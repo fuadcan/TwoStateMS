@@ -1,7 +1,7 @@
-setwd("~/ReplciationFiles/")
+setwd("~/TwoStateMS/")
 source("convDLV.R")
-source("plotAll.R")
-source("plotRejs.R")
+# source("plotAll.R")
+# source("plotRejs.R")
 
 # Estimating d's for only d switching analysis
 res1930   <- convDLV(1930,1)
@@ -9,6 +9,7 @@ Sys.time()
 resg7sp   <- convDLV("G7+S&P",1)
 Sys.time()
 Sys.sleep(300)
+reseu     <- convDLV("Europe",1)
 Sys.time()
 resg7eu   <- convDLV("Europe+G7",1)
 Sys.time()
@@ -16,7 +17,7 @@ Sys.sleep(300)
 Sys.time()
 resspeu   <- convDLV("Europe+S&P",1)
 Sys.time()
-ress <- list(res1930,resg7sp,resg7eu,resspeu)
+ress_d <- list(res1930,resg7sp,resg7eu,resspeu)
 
 # Estimating d's for both d and mu switching analysis
 res1930   <- convDLV(1930,2)
@@ -24,6 +25,7 @@ Sys.time()
 resg7sp   <- convDLV("G7+S&P",2)
 Sys.time()
 Sys.sleep(300)
+reseu     <- convDLV("Europe",2)
 Sys.time()
 resg7eu   <- convDLV("Europe+G7",2)
 Sys.time()
@@ -31,12 +33,12 @@ Sys.sleep(300)
 Sys.time()
 resspeu   <- convDLV("Europe+S&P",2)
 Sys.time()
-ress <- list(res1930,resg7sp,resg7eu,resspeu)
+ress_dm   <- list(res1930,resg7sp,resg7eu,resspeu)
 
 
 correctRes <- function(res){
   # Reformats the table of estimates for it to be in "dH,dL,PHH,PLL, ..." order
-  res[res[,1]>res[,2],] <- res[res[,1]>res[,2],][,c(2,1,4,3,5:9)]
+  res[res[,1]>res[,2],] <- res[res[,1]>res[,2],][,c(2,1,4,3,5:ncol(res))]
   
   return(res)
 }
