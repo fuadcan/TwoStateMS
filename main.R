@@ -1,90 +1,64 @@
 setwd("~/TwoStateMS/")
 source("convDLV.R")
+source("utils.R")
+source("dlvPath.R")
 # source("plotAll.R")
 # source("plotRejs.R")
 
 # Estimating d's for only d switching analysis
 res1930   <- convDLV(1930,1)
-Sys.time()
-resg7sp   <- convDLV("G7+S&P",1)
-Sys.time()
-Sys.sleep(300)
+res1940   <- convDLV(1940,1)
+res1950   <- convDLV(1950,1)
 reseu     <- convDLV("Europe",1)
-Sys.time()
 resg7eu   <- convDLV("Europe+G7",1)
-Sys.time()
-Sys.sleep(300)
-Sys.time()
+resg7sp   <- convDLV("G7+S&P",1)
 resspeu   <- convDLV("Europe+S&P",1)
-Sys.time()
-ress_d <- list(res1930,resg7sp,resg7eu,resspeu)
 
 # Estimating d's for both d and mu switching analysis
 res1930   <- convDLV(1930,2)
-Sys.time()
-resg7sp   <- convDLV("G7+S&P",2)
-Sys.time()
-Sys.sleep(300)
+res1940   <- convDLV(1940,2)
+res1950   <- convDLV(1950,2)
 reseu     <- convDLV("Europe",2)
-Sys.time()
 resg7eu   <- convDLV("Europe+G7",2)
-Sys.time()
-Sys.sleep(300)
-Sys.time()
+resg7sp   <- convDLV("G7+S&P",2)
 resspeu   <- convDLV("Europe+S&P",2)
-Sys.time()
-ress_dm   <- list(res1930,resg7sp,resg7eu,resspeu)
 
 
-correctRes <- function(res){
-  # Reformats the table of estimates for it to be in "dH,dL,PHH,PLL, ..." order
-  res[res[,1]>res[,2],] <- res[res[,1]>res[,2],][,c(2,1,4,3,5:ncol(res))]
-  
-  return(res)
-}
 
-report <- function(res){
-  # reports the statistics of the output table
-  nr        <- nrow(res)
-  noChange  <- res[res[,1]==res[,2],]
-  noChangeS <- noChange[noChange[,1]<1,]
-  noChangeN <- noChange[noChange[,1]>=1,]
-  change    <- res[res[,1]!=res[,2],]
-  changeSS  <- change[change[,1] < 1 & change[,2] < 1,]
-  changeNN  <- change[change[,1] >= 1 & change[,2] >= 1,]
-  changeNS  <- change[(change[,1] >= 1 & change[,2] <= 1) | (change[,1] <= 1 & change[,2] >= 1),]
-  
-  repp <- t(sapply(list(noChangeS,noChangeN,changeSS,changeNN,changeNS), function(d)
-    c(nrow(d)/nr, apply(d[,c(1:4)],2,function(x) mean(x,na.rm=T)), sum(d[,9])/nr)))
-  repp <- repp[c(3,5,4),]
-  rownames(repp) <- c("N - N","N - Y","Y - Y")
-  colnames(repp) <- c("Perc.","Avg. d_1","Avg. d_2","Avg. P_11","Avg. P_22", "Rej. ADF")
-  
-  return(repp)
-}
 
 # Reading outputs
-res1930 <- get(load("results/d_1930_resALL.rda"))
-resg7eu <- get(load("results/d_Europe+G7_resALL.rda"))
-resg7sp <- get(load("results/d_G7+S&P_resALL.rda"))
-res1940 <- get(load("results/d_1940_resALL.rda"))
-resspeu <- get(load("results/d_Europe+S&P_resALL.rda"))
+ress_d  <- lapply(dir("output","_D_.*resALL.rda"), function(d) get(load(paste0("output/",d))))
+ress_dm <- lapply(dir("output","_DM_.*resALL.rda"), function(d) get(load(paste0("output/",d))))
 
-# Procesing outputs
-res1930 <- correctRes(res1930)
-save(res1930,file="results/d_1930_resALL.rda")
-resg7eu <- correctRes(resg7eu)
-save(resg7eu,file="results/d_Europe+G7_resALL.rda")
-resg7sp <- correctRes(resg7sp)
-save(resg7sp,file="results/d_G7+S&P_resALL.rda")
-res1940 <- correctRes(res1940)
-save(res1940,file="results/d_1940_resALL.rda")
-resspeu <- correctRes(resspeu)
-save(resspeu,file="results/d_Europe+S&P_resALL.rda")
+# Converting to tables
+ress_d  <- lapply(ress_d, totable)
+ress_dm <- lapply(ress_dm, totable)
+
+# Reformating results
+ress_d  <- lapply(ress_d, correctRes)
+ress_dm <- lapply(ress_dm, correctRes)
+
+# data names and pair panels
+dnames     <- gsub("d_|_D_resALL.rda","",dir("output","_D_.*resALL.rda"))
+pdats      <- lapply(dnames, gen_pdat)
+
+# State switching series for dm and d
+pathss_DM   <- lapply(1:length(ress_dm), function(i) lapply(1:nrow(ress_dm[[i]]), function(x) dlvPath_dm(ress_dm[[i]][x,-8],pdats[[i]][,x])))
+change_DM   <- lapply(pathss_DM, function(paths) sapply(paths, function(p) sum(apply(p,1,sum)>0)>1))
+
+pathss_D    <- lapply(1:length(ress_d), function(i) lapply(1:nrow(ress_d[[i]]), function(x) dlvPath_d(ress_d[[i]][x,-7],pdats[[i]][,x])))
+change_D    <- lapply(pathss_D, function(paths) sapply(paths, function(p) sum(apply(p,1,sum)>0)>1))
+
+# Correcting results
+ischange <- lapply(pathss_DM, function(paths) t(sapply(paths, function(p) {temp <- apply(p,1,sum) > 0; temp <- c(temp,temp,T,temp); return(temp)})))
+parss_dm <- lapply(1:length(ress_dm),  function(i)  ress_dm[[i]][,-8] * ischange[[i]])
+
+ischange <- lapply(pathss_D, function(paths) t(sapply(paths, function(p) {temp <- apply(p,1,sum) > 0; temp <- c(temp,temp,T,T); return(temp)})))
+parss_d  <- lapply(1:length(ress_d),  function(i)  ress_d[[i]][,-7] * ischange[[i]])
 
 
 # Reporting outputs
-rep <- suppressWarnings(data.frame(rbind(report(res1930),report(res1940),report(resg7eu),report(resg7sp),report(resspeu))))
+rep <- suppressWarnings(data.frame(rbind(report(res1930),report(res1940),report(res1940),report(resg7eu),report(resg7sp),report(resspeu))))
 rep <- cbind(unlist(lapply(c("1930","1940","g7+eu","g7+sp","eu+sp"),function(d) rep(d, 3))),rep)
 rep <- cbind(unlist(lapply(c("S - S","N - Y","Y - Y"),function(d) rep(d, 5))),rep)
 colnames(rep)[1:2] <- c("class","data")
