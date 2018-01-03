@@ -44,10 +44,10 @@ pdats      <- lapply(dnames, gen_pdat)
 
 # State switching series for dm and d
 pathss_DM   <- lapply(1:length(ress_dm), function(i) lapply(1:nrow(ress_dm[[i]]), function(x) dlvPath_dm(ress_dm[[i]][x,-8],pdats[[i]][,x])))
-change_DM   <- lapply(pathss_DM, function(paths) sapply(paths, function(p) sum(apply(p,1,sum)>0)>1))
+# change_DM   <- lapply(pathss_DM, function(paths) sapply(paths, function(p) sum(apply(p,1,sum)>0)>1))
 
 pathss_D    <- lapply(1:length(ress_d), function(i) lapply(1:nrow(ress_d[[i]]), function(x) dlvPath_d(ress_d[[i]][x,-7],pdats[[i]][,x])))
-change_D    <- lapply(pathss_D, function(paths) sapply(paths, function(p) sum(apply(p,1,sum)>0)>1))
+# change_D    <- lapply(pathss_D, function(paths) sapply(paths, function(p) sum(apply(p,1,sum)>0)>1))
 
 # Correcting results
 ischange <- lapply(pathss_DM, function(paths) t(sapply(paths, function(p) {temp <- apply(p,1,sum) > 0; temp <- c(temp,temp,T,temp); return(temp)})))
@@ -56,7 +56,7 @@ parss_dm <- lapply(1:length(ress_dm),  function(i)  ress_dm[[i]][,-8] * ischange
 ischange <- lapply(pathss_D, function(paths) t(sapply(paths, function(p) {temp <- apply(p,1,sum) > 0; temp <- c(temp,temp,T,T); return(temp)})))
 parss_d  <- lapply(1:length(ress_d),  function(i)  ress_d[[i]][,-7] * ischange[[i]])
 
-
+rep <- do.call(rbind,lapply(parss_dm,report))
 # Reporting outputs
 rep <- suppressWarnings(data.frame(rbind(report(res1930),report(res1940),report(res1940),report(resg7eu),report(resg7sp),report(resspeu))))
 rep <- cbind(unlist(lapply(c("1930","1940","g7+eu","g7+sp","eu+sp"),function(d) rep(d, 3))),rep)

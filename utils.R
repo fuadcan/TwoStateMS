@@ -95,9 +95,9 @@ report <- function(res){
   
   
   repp <- t(sapply(list(noChangeS,noChangeN,changeSS,changeNN,changeNS), function(d){
+    d <- matrix(d,,ncol(res))
     d[d==0] <- NA
-    c(nrow(d)/nr, apply(d[,c(1:ncol(res))],2,function(x) mean(x,na.rm=T))
-    )
+    c(nrow(d)/nr, sapply(1:ncol(res), function(i) mean(d[,i],na.rm=T)))
   }))
   repp <- repp[c(1,2,3,5,4),]
   rownames(repp) <- c("C","D","C - C","C - D","D - D")
