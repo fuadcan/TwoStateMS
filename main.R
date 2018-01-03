@@ -56,13 +56,20 @@ parss_dm <- lapply(1:length(ress_dm),  function(i)  ress_dm[[i]][,-8] * ischange
 ischange <- lapply(pathss_D, function(paths) t(sapply(paths, function(p) {temp <- apply(p,1,sum) > 0; temp <- c(temp,temp,T,T); return(temp)})))
 parss_d  <- lapply(1:length(ress_d),  function(i)  ress_d[[i]][,-7] * ischange[[i]])
 
-rep <- do.call(rbind,lapply(parss_dm,report))
 # Reporting outputs
-rep <- suppressWarnings(data.frame(rbind(report(res1930),report(res1940),report(res1940),report(resg7eu),report(resg7sp),report(resspeu))))
-rep <- cbind(unlist(lapply(c("1930","1940","g7+eu","g7+sp","eu+sp"),function(d) rep(d, 3))),rep)
-rep <- cbind(unlist(lapply(c("S - S","N - Y","Y - Y"),function(d) rep(d, 5))),rep)
-colnames(rep)[1:2] <- c("class","data")
-write.table(rep, "table.csv", col.names = T, row.names = T)
+rep_dm <- do.call(rbind,lapply(parss_dm,report))
+rep_dm <- data.frame(c(sapply(dnames, function(n) rep(n,5))),rownames(rep_dm),rep_dm)
+
+rep_d  <- do.call(rbind,lapply(parss_d,report))
+rep_d  <- data.frame(c(sapply(dnames, function(n) rep(n,5))),rownames(rep_d),rep_d)
+
+colnames(rep_dm) <- c("Data","Conv?",colnames(rep_dm)[-(1:2)])
+colnames(rep_d)  <- c("Data","Conv?",colnames(rep_d)[-(1:2)])
+
+# Writing reports
+write.csv(rep_dm, "results/report_dm.csv")
+write.csv(rep_d , "results/report_d.csv")
+
 
 # Plotting all path graphs
 lapply(c(1930, 1940), plotAll)
