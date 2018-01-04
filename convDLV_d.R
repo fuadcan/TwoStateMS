@@ -2,7 +2,7 @@
 source("mclapplyhack.R")
 library("urca")
 
-convDLV_old <- function(yearOrRegion){
+convDLV_d <- function(yearOrRegion){
   
   if(is.numeric(yearOrRegion)){year      <- yearOrRegion
   filename  <- paste0("data/madisonFrom-",year,".csv")

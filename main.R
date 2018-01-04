@@ -6,24 +6,22 @@ source("dlvPath.R")
 # source("plotRejs.R")
 
 # Estimating d's for only d switching analysis
-res1930   <- convDLV(1930,1)
-res1940   <- convDLV(1940,1)
-res1950   <- convDLV(1950,1)
-reseu     <- convDLV("Europe",1)
-resg7eu   <- convDLV("Europe+G7",1)
-resg7sp   <- convDLV("G7+S&P",1)
-resspeu   <- convDLV("Europe+S&P",1)
+res1930   <- convDLV_d(1930)
+res1940   <- convDLV_d(1940)
+res1950   <- convDLV_d(1950)
+reseu     <- convDLV_d("Europe")
+resg7eu   <- convDLV_d("Europe+G7")
+resg7sp   <- convDLV_d("G7+S&P")
+resspeu   <- convDLV_d("Europe+S&P")
 
 # Estimating d's for both d and mu switching analysis
-res1930   <- convDLV(1930,2)
-res1940   <- convDLV(1940,2)
-res1950   <- convDLV(1950,2)
-reseu     <- convDLV("Europe",2)
-resg7eu   <- convDLV("Europe+G7",2)
-resg7sp   <- convDLV("G7+S&P",2)
-resspeu   <- convDLV("Europe+S&P",2)
-
-
+res1930   <- convDLV_dm(1930)
+res1940   <- convDLV_dm(1940)
+res1950   <- convDLV_dm(1950)
+reseu     <- convDLV_dm("Europe")
+resg7eu   <- convDLV_dm("Europe+G7")
+resg7sp   <- convDLV_dm("G7+S&P")
+resspeu   <- convDLV_dm("Europe+S&P")
 
 
 # Reading outputs
