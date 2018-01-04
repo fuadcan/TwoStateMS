@@ -13,18 +13,18 @@ convDLV_old <- function(yearOrRegion){
     z         <- data.matrix(z)
   } else if(yearOrRegion == "Europe") {z <- data.matrix(read.table("data/mds_Europe-1950.csv",header = T,sep = ";"))} else {
     fname1 <- paste0("data/mds_G7-1950.csv"); fname2 <- paste0("data/mds_Europe-1950.csv"); fname3 <- paste0("data/mds_S&P-1950.csv")
-  z_g7         <- read.table(fname1,header = T,sep = ";"); z_g7 <- data.matrix(z_g7)
-  z_eu         <- read.table(fname2,header = T,sep = ";"); z_eu <- data.matrix(z_eu)
-  z_sp         <- read.table(fname3,header = T,sep = ";"); z_sp <- data.matrix(z_sp)
-  
-  
-  if(yearOrRegion=="Europe+G7"|yearOrRegion=="G7+Europe")
-  {z<- matrix(c(z_g7,z_eu),dim(z_g7)[1],); colnames(z)<- c(colnames(z_g7),colnames(z_eu))} else
-    if(yearOrRegion=="Europe+S&P"|yearOrRegion=="S&P+Europe")
-    {z<- matrix(c(z_eu,z_sp),dim(z_eu)[1],); colnames(z)<- c(colnames(z_eu),colnames(z_sp))} else
-      if(yearOrRegion=="G7+S&P"|yearOrRegion=="S&P+G7")
-      {z<- matrix(c(z_g7,z_sp),dim(z_g7)[1],); colnames(z)<- c(colnames(z_g7),colnames(z_sp))} else {stop("Unknown Country List")}
-  if(sum(duplicated(t(z)))!=0){z<- z[,-which(duplicated(t(z)))]}
+    z_g7         <- read.table(fname1,header = T,sep = ";"); z_g7 <- data.matrix(z_g7)
+    z_eu         <- read.table(fname2,header = T,sep = ";"); z_eu <- data.matrix(z_eu)
+    z_sp         <- read.table(fname3,header = T,sep = ";"); z_sp <- data.matrix(z_sp)
+    
+    
+    if(yearOrRegion=="Europe+G7"|yearOrRegion=="G7+Europe")
+    {z<- matrix(c(z_g7,z_eu),dim(z_g7)[1],); colnames(z)<- c(colnames(z_g7),colnames(z_eu))} else
+      if(yearOrRegion=="Europe+S&P"|yearOrRegion=="S&P+Europe")
+      {z<- matrix(c(z_eu,z_sp),dim(z_eu)[1],); colnames(z)<- c(colnames(z_eu),colnames(z_sp))} else
+        if(yearOrRegion=="G7+S&P"|yearOrRegion=="S&P+G7")
+        {z<- matrix(c(z_g7,z_sp),dim(z_g7)[1],); colnames(z)<- c(colnames(z_g7),colnames(z_sp))} else {stop("Unknown Country List")}
+    if(sum(duplicated(t(z)))!=0){z<- z[,-which(duplicated(t(z)))]}
   }
   
   
@@ -44,7 +44,7 @@ convDLV_old <- function(yearOrRegion){
   from  <- 1 + (0:4)*step
   to    <- (1:5)*step
   to[5] <- nc
-
+  
   
   res1 <- simplify2array(mclapply.hack(from[1]:to[1], function(n){
     cat(paste0(n,"\n"))
