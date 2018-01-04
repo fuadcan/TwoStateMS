@@ -53,14 +53,14 @@ convDLV_old <- function(yearOrRegion){
     temp <- tryCatch(c(temp$par,temp$value),error=function(e){rep(NA,7)}); return(temp)}))
   
   cat(paste0("step 1 with ",to[1]-from[1]+1, " series is done\n"))
-  save(res1, file=paste0("results/d_",yearOrRegion,"_res1.rda"))
+  save(res1, file=paste0("output/d_",yearOrRegion,"_D_res1.rda"))
   
   res2 <- simplify2array(mclapply.hack(from[2]:to[2], function(n){
     temp <- tryCatch(optim(inits, function(p) -lnviD2(p,pPanel[,n]),lower = lowerV,
                            upper = upperV,method="L-BFGS-B"), error=function(e){NA})
     temp <- tryCatch(c(temp$par,temp$value),error=function(e){rep(NA,7)}); return(temp)}))
   
-  save(res2, file=paste0("results/d_",yearOrRegion,"_res2.rda"))
+  save(res2, file=paste0("output/d_",yearOrRegion,"_D_res2.rda"))
   cat(paste0("step 2 with ",to[1]-from[1]+1, " series is done\n"))
   
   res3 <- simplify2array(mclapply.hack(from[3]:to[3], function(n){
@@ -68,7 +68,7 @@ convDLV_old <- function(yearOrRegion){
                            upper = upperV,method="L-BFGS-B"), error=function(e){NA})
     temp <- tryCatch(c(temp$par,temp$value),error=function(e){rep(NA,7)}); return(temp)}))
   
-  save(res3, file=paste0("results/d_",yearOrRegion,"_res3.rda"))
+  save(res3, file=paste0("output/d_",yearOrRegion,"_D_res3.rda"))
   cat(paste0("step 3 with ",to[1]-from[1]+1, " series is done\n"))
   
   res4 <- simplify2array(mclapply.hack(from[4]:to[4], function(n){
@@ -76,7 +76,7 @@ convDLV_old <- function(yearOrRegion){
                            upper = upperV,method="L-BFGS-B"), error=function(e){NA})
     temp <- tryCatch(c(temp$par,temp$value),error=function(e){rep(NA,7)}); return(temp)}))
   
-  save(res4, file=paste0("results/d_",yearOrRegion,"_res4.rda"))
+  save(res4, file=paste0("output/d_",yearOrRegion,"_D_res4.rda"))
   cat(paste0("step 4 with ",to[1]-from[1]+1, " series is done\n"))
   
   res5 <- simplify2array(mclapply.hack(from[5]:to[5], function(n){
@@ -84,7 +84,7 @@ convDLV_old <- function(yearOrRegion){
                            upper = upperV,method="L-BFGS-B"), error=function(e){NA})
     temp <- tryCatch(c(temp$par,temp$value),error=function(e){rep(NA,7)}); return(temp)}))
   
-  save(res5, file=paste0("results/d_",yearOrRegion,"_res5.rda"))
+  save(res5, file=paste0("output/d_",yearOrRegion,"_D_res5.rda"))
   cat(paste0("step 5 with ",to[1]-from[1]+1, " series is done\n"))
   
   res   <- cbind(res1,res2,res3,res4,res5)
@@ -92,7 +92,7 @@ convDLV_old <- function(yearOrRegion){
   resdf <- apply(pPanel,2, function(p){r <- ur.df(p,"drift"); hp <- r@cval[1,2] > r@teststat[1]; return(c(r@teststat[1],hp))})
   res   <- t(rbind(res,resdf))
   
-  save(res, file=paste0("results/d_",yearOrRegion,"_resALL.rda"))
+  save(res, file=paste0("output/d_",yearOrRegion,"_D_resALL.rda"))
   
   return(res)
   
