@@ -17,7 +17,7 @@ Run all the commands in main.R. The file contains commands used for reading, est
 
     Inputs:
     1. b: Initial set of parameters
-    2. w: series to be fitted MS-ARFIMA$ (0,d,0) $
+    2. w: series to be fitted MS-ARFIMA$ (0,d,0)
 		 
     Output: Log-likelihood of the estimate
 
