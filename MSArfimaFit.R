@@ -1,6 +1,6 @@
 source("lnviD2.R")
 source("lnviDM2.R")
-source("lnviDMS2.R")
+source("lnviDSM2.R")
 source("lnviDS2.R")
 
 # Initial and Boundary Parameters
