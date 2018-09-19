@@ -56,13 +56,13 @@ const_mat <- cbind(const_mat,c(pars$lowerV,-pars$upperV))
 optimizator <- function(i){
   inits1  <- pars$inits1
   temp1 <- constrOptim(inits1, function(p) -DLValgo(p,pPanel[,i]), NULL, ui = const_mat[,-ncol(const_mat)], const_mat[,ncol(const_mat)])
-  if(temp1$convergence==0){out <- temp1} else {
+  if(temp1$convergence!=0){out <- temp1} else {
     inits2 <- pars$inits2
     temp2  <- constrOptim(inits2, function(p) -DLValgo(p,pPanel[,i]), NULL, ui = const_mat[,-ncol(const_mat)], const_mat[,ncol(const_mat)])
-    if(temp2$convergence == 0) {out <- temp2} else {
+    if(temp2$convergence != 0) {out <- temp2} else {
       inits3 <- pars$inits3
       temp3  <- constrOptim(inits3, function(p) -DLValgo(p,pPanel[,i]), NULL, ui = const_mat[,-ncol(const_mat)], const_mat[,ncol(const_mat)])
-      if(temp3$convergence == 0) {out <- temp3} else {
+      if(temp3$convergence != 0) {out <- temp3} else {
         templist <- list(temp1,temp2,temp3)
         lkls     <- sapply(templist, function(t) t$value)
         out      <- templist[[which(min(lkls)==lkls)[1]]]
