@@ -29,7 +29,7 @@ pars <- list(
 )
 
 # Algorithms
-DLValgo <- list(DMS=lnviDMS2,DM=lnviDM2,DS=lnviDS2,D=lnviD2)
+DLValgo <- list(DMS=lnviDSM2,DM=lnviDM2,DS=lnviDS2,D=lnviD2)
 
 
 MSArfima.fit <- function(ser, type){
@@ -43,8 +43,8 @@ MSArfima.fit <- function(ser, type){
 
 
 # Parameters
-DLValgo  <- DLValgo[type]
-pars     <- pars[type]
+  DLValgo  <- DLValgo[[type]]
+  pars     <- pars[[type]]
 
 # Constraints
 const_mat <- matrix(0,length(pars$lowerV),length(pars$lowerV))
@@ -53,16 +53,17 @@ const_mat <- rbind(const_mat,-const_mat)
 const_mat <- cbind(const_mat,c(pars$lowerV,-pars$upperV))
 
 # Function for optimizing DLValgo
-optimizator <- function(i){
+optimizator <- function(){
   inits1  <- pars$inits1
-  temp1 <- constrOptim(inits1, function(p) -DLValgo(p,pPanel[,i]), NULL, ui = const_mat[,-ncol(const_mat)], const_mat[,ncol(const_mat)])
-  if(temp1$convergence!=0){out <- temp1} else {
+  temp1 <- constrOptim(inits1, function(p) -DLValgo(p,ser), NULL, ui = const_mat[,-ncol(const_mat)], const_mat[,ncol(const_mat)])
+  
+  if(temp1$convergence==0){out <- temp1} else {
     inits2 <- pars$inits2
-    temp2  <- constrOptim(inits2, function(p) -DLValgo(p,pPanel[,i]), NULL, ui = const_mat[,-ncol(const_mat)], const_mat[,ncol(const_mat)])
-    if(temp2$convergence != 0) {out <- temp2} else {
+    temp2  <- constrOptim(inits2, function(p) -DLValgo(p,ser), NULL, ui = const_mat[,-ncol(const_mat)], const_mat[,ncol(const_mat)])
+    if(temp2$convergence == 0) {out <- temp2} else {
       inits3 <- pars$inits3
-      temp3  <- constrOptim(inits3, function(p) -DLValgo(p,pPanel[,i]), NULL, ui = const_mat[,-ncol(const_mat)], const_mat[,ncol(const_mat)])
-      if(temp3$convergence != 0) {out <- temp3} else {
+      temp3  <- constrOptim(inits3, function(p) -DLValgo(p,ser), NULL, ui = const_mat[,-ncol(const_mat)], const_mat[,ncol(const_mat)])
+      if(temp3$convergence == 0) {out <- temp3} else {
         templist <- list(temp1,temp2,temp3)
         lkls     <- sapply(templist, function(t) t$value)
         out      <- templist[[which(min(lkls)==lkls)[1]]]
@@ -71,4 +72,6 @@ optimizator <- function(i){
   }
   return(out)
 }
+optPars <- optimizator()
+optPars
 }
