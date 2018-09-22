@@ -1,4 +1,6 @@
+setwd("TwoStateMS")
 source("MSArfimaFit.R")
+source("dlvPath.R")
 
 # Read data
 dat  <- read.csv("data/madisonFrom-1930.csv",sep=";")
@@ -29,19 +31,26 @@ title(sername)
 ## only d and mu switch states
 opt  <- MSArfima.fit(ser,"DM")
 path <- dlvPath_dm(opt$par,ser)
-dplot <- c(opt$par[1:2] %*% path)
+dplot  <- c(opt$par[1:2] %*% path)
+muplot <- c(tail(opt$par,2) %*% path)
 
 plot(yearrange, dplot, type='l',xlab = "Year",ylab = "d")
 title(sername)
 
+plot(yearrange, muplot, type='l',xlab = "Year",ylab = "mu")
+title(sername)
 
 
 ## only d and sigma switch states
 opt  <- MSArfima.fit(ser,"DS")
 path <- dlvPath_ds(opt$par,ser)
-dplot <- c(opt$par[1:2] %*% path)
+dplot     <- c(opt$par[1:2] %*% path)
+sigmaplot <- c(tail(opt$par,5:6) %*% path)
 
 plot(yearrange, dplot, type='l',xlab = "Year",ylab = "d")
+title(sername)
+
+plot(yearrange, sigmaplot, type='l',xlab = "Year",ylab = "sigma")
 title(sername)
 
 
@@ -50,6 +59,14 @@ title(sername)
 opt  <- MSArfima.fit(ser,"DMS")
 path <- dlvPath_dsm(opt$par,ser)
 dplot <- c(opt$par[1:2] %*% path)
+muplot    <- c(tail(opt$par,7:8) %*% path)
+sigmaplot <- c(tail(opt$par,5:6) %*% path)
 
 plot(yearrange, dplot, type='l',xlab = "Year",ylab = "d")
+title(sername)
+
+plot(yearrange, muplot, type='l',xlab = "Year",ylab = "mu")
+title(sername)
+
+plot(yearrange, sigmaplot, type='l',xlab = "Year",ylab = "sigma")
 title(sername)

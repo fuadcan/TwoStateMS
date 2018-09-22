@@ -1,8 +1,9 @@
 source("dlvPath.R")
 yearOrRegion <- 1930
 
-plotAll <- function(yearOrRegion){
+plotAll <- function(yearOrRegion,type){
   # yearOrRegion is the name of data set that parameters are estimated
+  # type is either D,DM,DS or DMS
 
   # Reading data 
   if(is.numeric(yearOrRegion)){year <- yearOrRegion
@@ -38,7 +39,7 @@ plotAll <- function(yearOrRegion){
   pPanel <- sapply(1:(n*(n-1)/2), function(i) z[,cmbn[1,i]] - z[,cmbn[2,i]])
   
   # Parameter estimates of the given data
-  parms     <- get(load(paste0("results/d_",yearOrRegion,"_resALL.rda")))
+  parms     <- get(load(paste0("output/d_",yearOrRegion,"_",type,"_","_resALL.rda")))
 
     
   # Plotting
