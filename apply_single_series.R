@@ -45,7 +45,7 @@ title(sername)
 opt  <- MSArfima.fit(ser,"DS")
 path <- dlvPath_ds(opt$par,ser)
 dplot     <- c(opt$par[1:2] %*% path)
-sigmaplot <- c(tail(opt$par,5:6) %*% path)
+sigmaplot <- c(opt$par[5:6] %*% path)
 
 plot(yearrange, dplot, type='l',xlab = "Year",ylab = "d")
 title(sername)
@@ -59,8 +59,8 @@ title(sername)
 opt  <- MSArfima.fit(ser,"DMS")
 path <- dlvPath_dsm(opt$par,ser)
 dplot <- c(opt$par[1:2] %*% path)
-muplot    <- c(tail(opt$par,7:8) %*% path)
-sigmaplot <- c(tail(opt$par,5:6) %*% path)
+muplot    <- c(opt$par[7:8] %*% path)
+sigmaplot <- c(opt$par[5:6] %*% path)
 
 plot(yearrange, dplot, type='l',xlab = "Year",ylab = "d")
 title(sername)
@@ -70,3 +70,5 @@ title(sername)
 
 plot(yearrange, sigmaplot, type='l',xlab = "Year",ylab = "sigma")
 title(sername)
+
+
