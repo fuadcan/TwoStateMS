@@ -1,15 +1,15 @@
 
 # Two State MS-ARFIMA 
 
-This repository consists R codes and helper files for Two State Markov Switching ARFIMA (2MS-ARFIMA) estimation proposed by Tsay and Härdle (2009). The original codes by Tsay and Hardle (2009) were translated from GAUSS to R and some errors are corrected. The repo also includes output gap analysis by Beylunioglu et.al. (2018).
+This repository consists R codes and helper files for Two State Markov Switching ARFIMA (2MS-ARFIMA) estimation proposed by Tsay and Härdle (2009). The original codes by Tsay and Hardle (2009) were translated from GAUSS to R and some errors are corrected. The repo also includes output gap analysis by [Beylunioglu et.al. (2018)](https://www.degruyter.com/view/journals/snde/22/3/article-20170043.xml).
 
 
 ## Outline
 The main code fits the model is `MSArfimaFit.R` with two inputs; series to be fit and type of the fit. The type can be either DMS,DM,DS or D that controls the parameters to state switch: for DMS, $(d,\mu,\sigma)$ switche between states whereas for D only $d$ switches so on.
 
-`MSArfimaFit.R` calls `lnviDMS`,`lnviDM`,`lnviDS` or `lnviD` with respect to the type given. These codes calculates likelihoods for a given series and a given parameter vector ($d_1,d_2,P_{11},P_{22},\mu_1,\mu_2, \sigma_1, \sigma_2 $) where in $\mu_1 = \mu_2, \sigma_1 = \sigma_2 $ are assumed in `lnviD2.R`. The parameter vector is given to `lnviD*` exogenously so that `MSArfima.fit` optimizes the function over the vector. The initial parameters and boundary values for optimization is given inside MSArfimaFit.R file and three different cases of initial vectors are written for each type, if the optimization does not converge, the rest is referred. The initial sets are chosen to meet the requirements for output gap analysis in Beylunioglu et.al (2018). Be sure to adjust them your analysis.
+`MSArfimaFit.R` calls `lnviDMS`,`lnviDM`,`lnviDS` or `lnviD` with respect to the type given. These codes calculates likelihoods for a given series and a given parameter vector ($d_1,d_2,P_{11},P_{22},\mu_1,\mu_2, \sigma_1, \sigma_2$) where in $\mu_1 = \mu_2, \sigma_1 = \sigma_2$ are assumed in `lnviD2.R`. The parameter vector is given to `lnviD*` exogenously so that `MSArfima.fit` optimizes the function over the vector. The initial parameters and boundary values for optimization is given inside MSArfimaFit.R file and three different cases of initial vectors are written for each type, if the optimization does not converge, the rest is referred. The initial sets are chosen to meet the requirements for output gap analysis in Beylunioglu et.al (2018). Be sure to adjust them your analysis.
 
-The rest of the codes support the analysis of Beylunioglu et.al (2018) which can be decomposed to three steps; estimating parameters $ d,P,\mu,\sigma $ etc., reporting descriptive statistics of the results and generating plots. All outputs are saved to disk.
+The rest of the codes support the analysis of Beylunioglu et.al (2018) which can be decomposed to three steps; estimating parameters $d,P,\mu,\sigma$ etc., reporting descriptive statistics of the results and generating plots. All outputs are saved to disk.
 
 Codes are designed in R project version 3.41 for Windows and developed in both Ubuntu 16.04 and Windows 8 64bit. To run the code trouble-free, please check your R version and save clone the repository into Documents folder.
 
